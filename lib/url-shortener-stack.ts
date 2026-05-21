@@ -38,6 +38,7 @@ export class UrlShortenerStack extends cdk.Stack {
     // Grant each Lambda only what it needs
     table.grantWriteData(createFn);
     table.grantReadData(redirectFn);
+    table.grant(redirectFn, 'dynamodb:UpdateItem');
 
     // ─── Step 3: API Gateway ──────────────────────────────────────
     const api = new apigateway.RestApi(this, 'UrlShortenerApi', {
