@@ -26,7 +26,7 @@ export class UrlShortenerStack extends cdk.Stack {
       runtime: Runtime.NODEJS_22_X,
       environment: {
         TABLE_NAME: table.tableName,
-        BASE_URL: 'https://REPLACE_AFTER_FIRST_DEPLOY.execute-api.amazonaws.com/prod',
+        BASE_URL: 'https://jxztqsuaw3.execute-api.us-east-2.amazonaws.com/prod',
       },
     });
 
