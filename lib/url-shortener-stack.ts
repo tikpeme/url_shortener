@@ -1,6 +1,7 @@
 import * as cdk from 'aws-cdk-lib';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as lambda from 'aws-cdk-lib/aws-lambda-nodejs';
+import { Runtime } from 'aws-cdk-lib/aws-lambda';
 import * as apigateway from 'aws-cdk-lib/aws-apigateway';
 
 export class UrlShortenerStack extends cdk.Stack {
@@ -22,6 +23,7 @@ export class UrlShortenerStack extends cdk.Stack {
     // ─── Step 2: Lambda functions ─────────────────────────────────
     const createFn = new lambda.NodejsFunction(this, 'CreateShortUrl', {
       entry: 'lambda/create.ts',
+      runtime: Runtime.NODEJS_22_X,
       environment: {
         TABLE_NAME: table.tableName,
         BASE_URL: 'https://REPLACE_AFTER_FIRST_DEPLOY.execute-api.amazonaws.com/prod',
@@ -30,6 +32,7 @@ export class UrlShortenerStack extends cdk.Stack {
 
     const redirectFn = new lambda.NodejsFunction(this, 'RedirectUrl', {
       entry: 'lambda/redirect.ts',
+      runtime: Runtime.NODEJS_22_X,
       environment: {
         TABLE_NAME: table.tableName,
       },
