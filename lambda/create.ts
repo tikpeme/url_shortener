@@ -1,15 +1,26 @@
 import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
-import { customAlphabet } from 'nanoid';
+import { randomBytes } from 'crypto';
 
 const client = new DynamoDBClient({});
 const TABLE_NAME = process.env.TABLE_NAME!;
 const BASE_URL = process.env.BASE_URL!;
 
-const nanoid = customAlphabet(
-  'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789',
-  7
-);
+const ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+const MAX_VALID = Math.floor(256 / ALPHABET.length) * ALPHABET.length;
+
+function nanoid(): string {
+  const chars: string[] = [];
+  while (chars.length < 7) {
+    for (const byte of randomBytes(7)) {
+      if (byte < MAX_VALID) {
+        chars.push(ALPHABET[byte % ALPHABET.length]);
+        if (chars.length === 7) break;
+      }
+    }
+  }
+  return chars.join('');
+}
 
 export const handler = async (
   event: APIGatewayProxyEvent
